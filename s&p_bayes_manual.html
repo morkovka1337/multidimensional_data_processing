@@ -1,0 +1,129 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#3d46eb", "font": {"size": 36}, "id": "Price", "label": "Price", "level": 1, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Price"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Price/Earnings", "label": "Price/Earnings", "level": 3, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Price/Earnings"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Dividend Yield", "label": "Dividend Yield", "level": 2, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Dividend Yield"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Earnings/Share", "label": "Earnings/Share", "level": 2, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Earnings/Share"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "52 Week Low", "label": "52 Week Low", "level": 0, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 52 Week Low"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "52 Week High", "label": "52 Week High", "level": 0, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 52 Week High"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Market Cap", "label": "Market Cap", "level": 0, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Market Cap"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "EBITDA", "label": "EBITDA", "level": 2, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 EBITDA"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Price/Sales", "label": "Price/Sales", "level": 0, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Price/Sales"}, {"color": "#3d46eb", "font": {"size": 36}, "id": "Price/Book", "label": "Price/Book", "level": 2, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Price/Book"}, {"color": "#eb3d3d", "font": {"size": 36}, "id": "Sector", "label": "Sector", "level": 2, "shape": "dot", "size": 45, "title": "\u0423\u0437\u0435\u043b \u0431\u0430\u0439\u0435\u0441\u043e\u0432\u0441\u043a\u043e\u0439 \u0441\u0435\u0442\u0438 Sector"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": "Price", "to": "Dividend Yield"}, {"arrows": "to", "from": "Price", "to": "Price/Earnings"}, {"arrows": "to", "from": "Dividend Yield", "to": "Price/Earnings"}, {"arrows": "to", "from": "52 Week Low", "to": "Price"}, {"arrows": "to", "from": "52 Week Low", "to": "Dividend Yield"}, {"arrows": "to", "from": "52 Week High", "to": "Price"}, {"arrows": "to", "from": "52 Week High", "to": "Dividend Yield"}, {"arrows": "to", "from": "52 Week High", "to": "Price/Earnings"}, {"arrows": "to", "from": "Market Cap", "to": "Price"}, {"arrows": "to", "from": "Price/Sales", "to": "Price/Earnings"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "layout": {
+        "hierarchical": {
+            "blockShifting": true,
+            "edgeMinimization": true,
+            "enabled": true,
+            "levelSeparation": 150,
+            "parentCentralization": true,
+            "sortMethod": "hubsize",
+            "treeSpacing": 200
+        },
+        "improvedLayout": true,
+        "randomSeed": 0
+    },
+    "physics": {
+        "enabled": true,
+        "hierarchicalRepulsion": {
+            "centralGravity": 0.5,
+            "damping": 0.09,
+            "nodeDistance": 300,
+            "springConstant": 0.01,
+            "springLength": 100
+        },
+        "solver": "hierarchicalRepulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
